@@ -3,122 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario Inmobiliario</title>
+    <title>InmoApp</title>
+    <!-- Manifiesto para que se vea como App al instalar -->
+    <link rel="manifest" href='data:application/json,{"name":"InmoApp","short_name":"InmoApp","start_url":"./index.html","display":"standalone","background_color":"#f8fafc","theme_color":"#4f46e5"}'>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Paleta de colores profesional */
-        :root {
-            --primary: #4f46e5; /* Indigo vibrante */
-            --bg: #f8fafc;
-        }
-        body { background-color: var(--bg); font-family: 'Inter', sans-serif; }
-        
-        .card { 
-            background: white; 
-            border: 1px solid #e2e8f0; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
-        }
-        
-        .input-style {
-            transition: all 0.3s ease;
-            border: 1.5px solid #e2e8f0;
-        }
-        
-        .input-style:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            transition: all 0.2s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: #4338ca;
-            transform: translateY(-1px);
-        }
+        :root { --primary: #4f46e5; }
+        body { background-color: #f8fafc; font-family: sans-serif; }
+        .input-style { transition: all 0.3s ease; border: 1.5px solid #e2e8f0; }
+        .input-style:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
-    <div class="max-w-xl mx-auto">
-        <div class="card p-8 rounded-3xl">
-            <!-- Título con acento de color -->
-            <div class="mb-8">
-                <h2 class="text-3xl font-extrabold text-slate-900">Registro</h2>
-                <div class="h-1.5 w-16 bg-indigo-500 rounded-full mt-2"></div>
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl">
+        <h2 class="text-3xl font-extrabold text-slate-900">Registro</h2>
+        <div class="h-1.5 w-16 bg-indigo-500 rounded-full mt-2 mb-8"></div>
+
+        <form id="propertyForm" class="space-y-5">
+            <input type="text" name="titulo" required placeholder="Título de la propiedad" class="w-full px-4 py-3 rounded-xl input-style outline-none">
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" name="precio" required placeholder="Precio" class="w-full px-4 py-3 rounded-xl input-style outline-none">
+                <select name="operacion" class="w-full px-4 py-3 rounded-xl input-style outline-none bg-white">
+                    <option>Venta</option>
+                    <option>Alquiler</option>
+                </select>
             </div>
-
-            <form id="propertyForm" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Nombre de la Propiedad</label>
-                    <input type="text" name="titulo" required placeholder="Ej. Apartamento zona 10" 
-                           class="w-full px-4 py-3 rounded-xl input-style outline-none text-slate-800">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1">Precio</label>
-                        <input type="text" name="precio" required placeholder="Q0.00" 
-                               class="w-full px-4 py-3 rounded-xl input-style outline-none text-slate-800">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1">Tipo</label>
-                        <select name="operacion" class="w-full px-4 py-3 rounded-xl input-style outline-none text-slate-800 bg-white">
-                            <option>Venta</option>
-                            <option>Alquiler</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-1">Descripción</label>
-                    <textarea name="descripcion" rows="3" required placeholder="Detalles clave..." 
-                              class="w-full px-4 py-3 rounded-xl input-style outline-none text-slate-800"></textarea>
-                </div>
-
-                <!-- Input de fotos estilizado -->
-                <div>
-                    <label class="block text-sm font-semibold text-slate-600 mb-2">Galería de fotos</label>
-                    <input type="file" name="fotos" multiple accept="image/*" required
-                           class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all">
-                </div>
-
-                <button type="submit" id="submitBtn" 
-                        class="w-full btn-primary text-white font-bold py-4 rounded-xl mt-4">
-                    Generar
-                </button>
-            </form>
-
-            <div id="status" class="mt-4 hidden p-4 rounded-xl text-center font-bold"></div>
-        </div>
+            <textarea name="descripcion" rows="3" required placeholder="Descripción..." class="w-full px-4 py-3 rounded-xl input-style outline-none"></textarea>
+            
+            <input type="file" name="fotos" multiple accept="image/*" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-indigo-50 file:text-indigo-700">
+            
+            <button type="submit" id="submitBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition">Generar</button>
+        </form>
+        <div id="status" class="mt-4 hidden p-4 rounded-xl text-center font-bold"></div>
     </div>
 
     <script>
+        // Webhook configurado correctamente:
         const WEBHOOK_URL = "https://hook.us2.make.com/eig9p1leym1jywbgjddo6u1vy93dls6y"; 
 
         document.getElementById('propertyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const status = document.getElementById('status');
-            
-            btn.disabled = true;
+            btn.disabled = true; 
             btn.innerText = 'Procesando...';
             
             try {
                 const response = await fetch(WEBHOOK_URL, { method: 'POST', body: new FormData(e.target) });
                 if(response.ok) {
-                    status.innerText = "¡Propiedad registrada con éxito!";
+                    status.innerText = "¡Enviado a Make!"; 
                     status.className = "mt-4 p-4 rounded-xl text-center font-bold bg-green-100 text-green-700";
                     e.target.reset();
+                } else {
+                    throw new Error('Error');
                 }
-            } catch {
-                status.innerText = "Hubo un error de conexión.";
+            } catch (err) {
+                status.innerText = "Error al enviar."; 
                 status.className = "mt-4 p-4 rounded-xl text-center font-bold bg-red-100 text-red-700";
             } finally {
-                btn.disabled = false;
-                btn.innerText = 'Generar';
+                btn.disabled = false; 
+                btn.innerText = 'Generar'; 
                 status.classList.remove('hidden');
             }
         });
